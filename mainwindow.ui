@@ -67,7 +67,7 @@
      </widget>
     </item>
     <item row="1" column="1" rowspan="3" colspan="3">
-     <widget class="QTextBrowser" name="textBrowser"/>
+     <widget class="QTextBrowser" name="tBr_result"/>
     </item>
     <item row="0" column="1">
      <widget class="QLabel" name="lb_time">
@@ -95,12 +95,41 @@
      <x>0</x>
      <y>0</y>
      <width>460</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
+   <widget class="QMenu" name="help">
+    <property name="title">
+     <string>Справка</string>
+    </property>
+    <addaction name="about"/>
+   </widget>
+   <addaction name="help"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="about">
+   <property name="text">
+    <string>О программе</string>
+   </property>
+  </action>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pb_Clear</sender>
+   <signal>clicked()</signal>
+   <receiver>tBr_result</receiver>
+   <slot>clear()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>89</x>
+     <y>234</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>236</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

@@ -1,49 +1,67 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(HW-qt7-5 LANGUAGES CXX)
-
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(PROJ_NAME hw-qt7-5)
+project(${PROJ_NAME} VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
-# Check http://doc.qt.io/qt-5/deployment-android.html for more information.
-# They need to be set before the find_package(Qt5 ...) call.
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 
-#if(ANDROID)
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
-#        set(ANDROID_EXTRA_LIBS
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
-#    endif()
-#endif()
+set(PROJECT_SOURCES
+        main.cpp
+        mainwindow.cpp
+        mainwindow.h
+        mainwindow.ui
+        about.cpp
+        about.h
+        about.ui
+        stopwatch.cpp
+        stopwatch.h
+)
 
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
-
-if(ANDROID)
-  add_library(HW-qt7-5 SHARED
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-    Stopwatch.cpp
-    Stopwatch.h
-  )
+if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
+    qt_add_executable(${PROJ_NAME}
+        MANUAL_FINALIZATION
+        ${PROJECT_SOURCES}
+    )
 else()
-  add_executable(HW-qt7-5
-    main.cpp
-    mainwindow.cpp
-    mainwindow.h
-    mainwindow.ui
-    Stopwatch.cpp
-    Stopwatch.h
-  )
+    if(ANDROID)
+        add_library(${PROJ_NAME} SHARED
+            ${PROJECT_SOURCES}
+        )
+    else()
+        add_executable(${PROJ_NAME}
+            ${PROJECT_SOURCES}
+        )
+    endif()
 endif()
 
-target_link_libraries(HW-qt7-5 PRIVATE Qt5::Widgets)
+target_link_libraries(${PROJ_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+
+if(${QT_VERSION} VERSION_LESS 6.1.0)
+  set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.${PROJ_NAME})
+endif()
+set_target_properties(${PROJ_NAME} PROPERTIES
+    ${BUNDLE_ID_OPTION}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE
+)
+
+include(GNUInstallDirs)
+install(TARGETS ${PROJ_NAME}
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+if(QT_VERSION_MAJOR EQUAL 6)
+    qt_finalize_executable(${PROJ_NAME})
+endif()
