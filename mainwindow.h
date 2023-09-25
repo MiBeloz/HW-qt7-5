@@ -24,6 +24,8 @@ private:
     Stopwatch *m_pStopwatch;
     int m_lap = 1;
 
+    QString doubleToHHMMSS(double value);
+
 public slots:
     void Rcv_returnTime(double time);
 private slots:
