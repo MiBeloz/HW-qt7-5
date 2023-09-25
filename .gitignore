@@ -6,3 +6,6 @@
 !*.c
 !*.cpp
 !*.ui
+!*.qrc
+!*.ico
+!*.png

@@ -23,6 +23,7 @@ set(PROJECT_SOURCES
         about.ui
         stopwatch.cpp
         stopwatch.h
+        res.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

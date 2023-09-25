@@ -4,7 +4,7 @@
 #include <QDialog>
 
 #define PROG_VER_MAJOR 1
-#define PROG_VER_MINOR 0
+#define PROG_VER_MINOR 1
 
 namespace Ui {
 class About;

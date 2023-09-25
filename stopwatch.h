@@ -14,11 +14,13 @@ public:
     void stopTimer();
     void timeout();
     void reset();
+    double getLap();
 
 private:
     QTimer *m_pTimer;
-    double m_time;
     int m_interval;
+    double m_time;
+    double m_duration;
 
 signals:
     void sig_timeout(double time);

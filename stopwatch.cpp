@@ -1,8 +1,6 @@
 #include "stopwatch.h"
 
-Stopwatch::Stopwatch(QObject *parent, int interval) : QObject(parent), m_interval(interval)
-{
-    m_time = 0.0;
+Stopwatch::Stopwatch(QObject *parent, int interval) : QObject(parent), m_interval(interval), m_time(0.0), m_duration(0.0) {
     m_pTimer = new QTimer(this);
     m_pTimer->setTimerType(Qt::PreciseTimer);
     m_pTimer->setInterval(m_interval);
@@ -29,4 +27,12 @@ void Stopwatch::timeout()
 void Stopwatch::reset()
 {
     m_time = 0.0;
+    m_duration = 0.0;
+}
+
+double Stopwatch::getLap()
+{
+    double result = m_time - m_duration;
+    m_duration = m_time;
+    return result;
 }
