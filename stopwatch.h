@@ -14,7 +14,7 @@ public:
     void stopTimer();
     void timeout();
     void reset();
-    double getLap();
+    QString getLap();
 
 private:
     QTimer *m_pTimer;
@@ -22,8 +22,10 @@ private:
     double m_time;
     double m_duration;
 
+    QString convertTimeToStr(double time);
+
 signals:
-    void sig_timeout(double time);
+    void sig_timeout(QString time);
 
 };
 

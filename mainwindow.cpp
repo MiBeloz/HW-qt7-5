@@ -15,7 +15,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pb_StartStop->setText(m_startStr);
     ui->pb_Lap->setEnabled(false);
     ui->pb_Clear->setEnabled(false);
-    //ui->lb_time->setText("00:00:00.0");
     ui->lb_time->setText("00:00.0");
 
     connect(m_pStopwatch, &Stopwatch::sig_timeout, this, &MainWindow::Rcv_returnTime);
@@ -24,7 +23,6 @@ MainWindow::MainWindow(QWidget *parent)
             m_pStopwatch->startTimer();
             ui->pb_StartStop->setText(m_stopStr);
             ui->pb_Lap->setEnabled(true);
-            ui->pb_Clear->setEnabled(true);
         }
         else {
             m_pStopwatch->stopTimer();
@@ -33,18 +31,15 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
     connect(ui->pb_Lap, &QPushButton::clicked, this, [this]{
-        ui->tBr_result->append("Круг №" + QString::number(m_lap) + ", Время: " + doubleToHHMMSS(m_pStopwatch->getLap()));
+        ui->tBr_result->append("Круг №" + QString::number(m_lap) + ", Время: " + m_pStopwatch->getLap());
         m_lap++;
+        ui->pb_Clear->setEnabled(true);
     });
     connect(ui->pb_Clear, &QPushButton::clicked, this, [this]{
-        m_pStopwatch->stopTimer();
         m_pStopwatch->reset();
-        //ui->lb_time->setText("00:00:00.0");
         ui->lb_time->setText("00:00.0");
-        ui->pb_StartStop->setText(m_startStr);
-        ui->pb_Lap->setEnabled(false);
-        ui->pb_Clear->setEnabled(false);
         m_lap = 1;
+        ui->pb_Clear->setEnabled(false);
     });
 }
 
@@ -53,26 +48,10 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-QString MainWindow::doubleToHHMMSS(double value)
+void MainWindow::Rcv_returnTime(QString time)
 {
-    int valueInt = static_cast<int>(value);
-    QString result;
-    //QString h = QString::number(valueInt / 3600);
-    QString m = QString::number((valueInt % 3600) / 60);
-    QString s = QString::number(valueInt % 60);
-    //QString hh = QString(2 - h.length(), '0') + h;
-    QString mm = QString(2 - m.length(), '0') + m;
-    QString ss = QString(2 - s.length(), '0') + s;
-    QString difference = QString::number(static_cast<int>((value - valueInt) * 10));
-
-    //return hh + ':' + mm + ":" + ss + "." + difference;
-    return mm + ":" + ss + "." + difference;
-}
-
-void MainWindow::Rcv_returnTime(double time)
-{
-
-    ui->lb_time->setText(doubleToHHMMSS(time));
+    ui->pb_Clear->setEnabled(true);
+    ui->lb_time->setText(time);
 }
 
 void MainWindow::on_about_triggered()

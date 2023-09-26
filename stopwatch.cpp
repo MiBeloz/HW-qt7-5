@@ -21,7 +21,7 @@ void Stopwatch::stopTimer()
 void Stopwatch::timeout()
 {
     m_time += 0.1;
-    sig_timeout(m_time);
+    emit sig_timeout(convertTimeToStr(m_time));
 }
 
 void Stopwatch::reset()
@@ -30,9 +30,18 @@ void Stopwatch::reset()
     m_duration = 0.0;
 }
 
-double Stopwatch::getLap()
+QString Stopwatch::getLap()
 {
     double result = m_time - m_duration;
     m_duration = m_time;
-    return result;
+    return convertTimeToStr(result);
+}
+
+QString Stopwatch::convertTimeToStr(double time) {
+    QString m = QString::number((static_cast<int>(time) % 3600) / 60);
+    QString s = QString::number(static_cast<int>(time) % 60);
+    QString mm = QString(2 - m.length(), '0') + m;
+    QString ss = QString(2 - s.length(), '0') + s;
+    QString ms = QString::number(static_cast<int>(((time - static_cast<int>(time)) * 100) / 10));
+    return mm + ":" + ss + "." + ms;
 }
